@@ -28,7 +28,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='main',
+    name='PDF_Extract_Merge',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -41,4 +41,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    version='Z:\\Python_Projects\\PDF_Editor\\file_version_info.txt',
+    icon=['Z:\\Python_Projects\\PDF_Editor\\python.ico'],
 )
