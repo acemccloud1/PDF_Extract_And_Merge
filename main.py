@@ -16,7 +16,7 @@ class Window():
         self.master = master
         self.master.title("PDF - Extract & Merge")
         self.master.iconbitmap(fr"Z:\Python_Projects\PDF_Editor\python.ico")
-        self.master.geometry('800x200')
+        self.master.geometry('650x250')
 
         self.RadioFrame = LabelFrame(self.master, text="Functions", width=250, height=150)
         self.RadioFrame.place(x=10, y=10)
@@ -47,8 +47,8 @@ class Window():
                         outputdir = str(p.parent)
                         filename_only = str(p.name).split('.')[0]
                         fileext = str(p.suffix)
-                        Label(frame, text=f"Selected File:- {filepath}").grid(row=5, column=0, sticky='w')
-                        Label(frame, text=f"Output Directory:- {outputdir}").grid(row=6, column=0, sticky='w')
+                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, sticky='w')
+                        Label(frame, text=f"Output Directory:- {outputdir}", bg="lime", fg="black", wraplength=400, justify=LEFT).grid(row=6, column=0, sticky='w')
                         # Extract all pages of the PDF file
                         input_pdf = PdfReader(filepath)
                         for i, page in enumerate(input_pdf.pages):
@@ -71,11 +71,11 @@ class Window():
                 self.ExtractRangeFrame = LabelFrame(self.master, text="Extract Custom Range", width=250, height=150)
                 self.ExtractRangeFrame.place(x=125, y=10)
                 frame = self.ExtractRangeFrame
-                Label(frame, text="Step# 1 --> Start Page#").grid(row=0, column=0)
+                Label(frame, text="Step# 1 --> Start Page#", wraplength=400, justify=LEFT).grid(row=0, column=0)
                 e1 = Entry(frame)
                 e1.grid(row=0, column=1)
                 e1.insert(0, "2")
-                Label(frame, text="Step# 2 --> End Page#").grid(row=1, column=0)
+                Label(frame, text="Step# 2 --> End Page#", wraplength=400, justify=LEFT).grid(row=1, column=0)
                 e2 = Entry(frame)
                 e2.grid(row=1, column=1)
                 e2.insert(0, "3")
@@ -88,8 +88,8 @@ class Window():
                         outputdir = str(p.parent)
                         filename_only = str(p.name).split('.')[0]
                         fileext = str(p.suffix)
-                        Label(frame, text=f"Selected File:- {filepath}").grid(row=5, column=0, sticky='w')
-                        Label(frame, text=f"Output Directory:- {outputdir}").grid(row=6, column=0, sticky='w')
+                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, sticky='w', columnspan=2)
+                        Label(frame, text=f"Output Directory:- {outputdir}", wraplength=400, justify=LEFT).grid(row=6, column=0, sticky='w', columnspan=2)
                         # Extract the pages from the give range
                         input_pdf = PdfReader(filepath)
                         output = PdfWriter()
@@ -100,11 +100,11 @@ class Window():
                         extracted_filepath = fr"{outputdir}\{filename_only}_{rangestart}-{rangeend}{fileext}"
                         with open(extracted_filepath, "wb") as output_stream:
                             output.write(output_stream)
-                        Label(frame, text=f"Extracted File:- {extracted_filepath}", fg="green").grid(row=7, column=0, sticky='w')
+                        Label(frame, text=f"Extracted File:- {extracted_filepath}", bg="lime", fg="black").grid(row=7, column=0, sticky='w', columnspan=2)
                         messagebox.showinfo(title="Success", message="Task completed successfully.")
                     except Exception as e:
                         messagebox.showerror(title="ERROR", message=fr"Error:- {e}")
-                Label(frame, text="Step# 3 --> ").grid(row=2, column=0)
+                Label(frame, text="Step# 3 --> ", wraplength=400, justify=LEFT).grid(row=2, column=0)
                 Button(frame, text="Select File", command=lambda: extractrange()).grid(row=2, column=1, padx=5, pady=5)
                 try:
                     self.ExtractAllFrame.destroy()
@@ -116,7 +116,7 @@ class Window():
                 self.MergeFrame = LabelFrame(self.master, text="Merge PDF", width=250, height=150)
                 self.MergeFrame.place(x=125, y=10)
                 frame = self.MergeFrame
-                Label(frame, text="NOTE:- The selected files will be sorted in an ascending oder before merging,\nso please name them in the order you want them merged.", fg='red').grid(row=1, column=0)
+                Label(frame, text="NOTE:- The selected files will be sorted in an ascending oder before merging, so please name them in the order you want them merged.", fg='red', wraplength=400, justify=LEFT).grid(row=1, column=0, columnspan=2)
                 def mergeall():
                     try:
                         # Fetch the folderpath
@@ -124,7 +124,7 @@ class Window():
                         filepath = filepath_tuple[0].replace('/', '\\')
                         p = Path(filepath)
                         outputdir = str(p.parent)
-                        Label(frame, text=f"Output Directory:- {outputdir}").grid(row=6, column=0, sticky='w')
+                        Label(frame, text=f"Output Directory:- {outputdir}", wraplength=400, justify=LEFT).grid(row=6, column=0, sticky='w')
                         # Merge all the PDF files in the directory
                         output = PdfMerger()
                         for i, filepath in enumerate(filepath_tuple):
@@ -134,16 +134,18 @@ class Window():
                         merged_filepath = fr"{outputdir}\Merged.pdf"
                         with open(merged_filepath, "wb") as output_stream:
                             output.write(output_stream)
-                        Label(frame, text=f"Merged File:- {merged_filepath}", fg="green").grid(row=7, column=0, sticky='w')
+                        Label(frame, text=f"Merged File:- {merged_filepath}", bg="lime", fg="black", wraplength=400, justify=LEFT).grid(row=7, column=0, sticky='w')
                         messagebox.showinfo(title="Success", message="Task completed successfully.")
                     except Exception as e:
                         messagebox.showerror(title="ERROR", message=fr"Error:- {e}")
-                Button(frame, text="Select Files", command=lambda: mergeall()).grid(row=2, column=0, padx=5, pady=5)
+                Button(frame, text="Select Files", command=lambda: mergeall()).grid(row=2, column=0, padx=10, pady=10, columnspan=2)
                 try:
                     self.ExtractAllFrame.destroy()
                     self.ExtractRangeFrame.destroy()
                 except AttributeError:
                     pass
+
+
 
 
 # root.mainloop()
