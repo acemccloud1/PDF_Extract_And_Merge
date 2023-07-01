@@ -41,6 +41,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    version='Z:\\Python_Projects\\PDF_Editor\\file_version_info.txt',
-    icon=['Z:\\Python_Projects\\PDF_Editor\\python.ico'],
+    version='file_version_info.txt',
+    icon=['python.ico'],
 )

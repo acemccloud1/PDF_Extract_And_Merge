@@ -77,13 +77,14 @@ class Window():
                 self.ExtractRangeFrame = LabelFrame(self.master, text="Extract Custom Range", width=250, height=150)
                 self.ExtractRangeFrame.place(x=165, y=10)
                 frame = self.ExtractRangeFrame
-                Label(frame, text="Step# 1 --> Start Page#", wraplength=400, justify=LEFT).grid(row=0, column=0)
-                e1 = Entry(frame)
-                e1.grid(row=0, column=1)
+                Label(frame, text="NOTE:- You may select only one file at a time for extraction.", fg='OrangeRed', wraplength=400, justify=LEFT).grid(row=0, column=0, columnspan=2)
+                Label(frame, text="Step# 1 --> Start Page#", wraplength=400, justify=LEFT).grid(row=1, column=0)
+                e1 = Entry(frame, width=10)
+                e1.grid(row=1, column=1)
                 e1.insert(0, "2")
-                Label(frame, text="Step# 2 --> End Page#", wraplength=400, justify=LEFT).grid(row=1, column=0)
-                e2 = Entry(frame)
-                e2.grid(row=1, column=1)
+                Label(frame, text="Step# 2 --> End Page#", wraplength=400, justify=LEFT).grid(row=2, column=0)
+                e2 = Entry(frame, width=10)
+                e2.grid(row=2, column=1)
                 e2.insert(0, "3")
                 def extractrange():
                     try:
@@ -110,8 +111,8 @@ class Window():
                         messagebox.showinfo(title="Success", message="Task completed successfully.")
                     except Exception as e:
                         messagebox.showerror(title="ERROR", message=fr"Error:- {e}")
-                Label(frame, text="Step# 3 --> ", wraplength=400, justify=LEFT).grid(row=2, column=0)
-                Button(frame, text="Select File", command=lambda: extractrange()).grid(row=2, column=1, padx=5, pady=5)
+                Label(frame, text="Step# 3 --> ", wraplength=400, justify=LEFT).grid(row=3, column=0)
+                Button(frame, text="Select File", command=lambda: extractrange()).grid(row=3, column=1, padx=5, pady=5)
                 try:
                     self.ExtractAllFrame.destroy()
                     self.MergeFrame.destroy()
