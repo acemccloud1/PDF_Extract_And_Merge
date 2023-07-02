@@ -36,7 +36,7 @@ class Window():
         for text, value in Options.items():
             Radiobutton(self.RadioFrame, text=text, variable=selection, value=value, command=lambda: Clicked(selection.get())).pack(anchor=W)
 
-        Label(self.InfoFrame, text=f"Creator:- Unmesh Patil\nLanguage: Python\nVersion: 1.0.0", wraplength=400, justify=LEFT).pack(anchor=W)
+        Label(self.InfoFrame, text=f"Creator: Unmesh Patil\nLanguage: Python\nVersion: 1.0.0", wraplength=400, justify=LEFT).pack(anchor=W)
 
         def Clicked(variable):
             if selection.get() == "extractall":
