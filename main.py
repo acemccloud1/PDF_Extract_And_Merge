@@ -15,7 +15,7 @@ class Window():
     def __init__(self, master):
         self.master = master
         self.master.title("PDF - Extract & Merge")
-        self.master.iconbitmap(fr"Z:\Python_Projects\PDF_Editor\python.ico")
+        self.master.iconbitmap(fr".\python.ico")
         self.master.geometry('700x300')
 
         self.RadioFrame = LabelFrame(self.master, text="Functions", width=250, height=150)
