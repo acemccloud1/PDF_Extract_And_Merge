@@ -1,9 +1,11 @@
 from PyPDF2 import PdfReader, PdfWriter, PdfMerger
+from pdf2jpg import pdf2jpg
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from pathlib import Path
 from base64 import b64decode
+import os
 
 
 # Encode the PNG files into byte-data so there's no need to package any additional data files into the EXE
@@ -37,7 +39,8 @@ class Window():
         Options = {
             "Extract All": "extractall",
             "Extract Range": "extractrange",
-            "Merge": "merge"
+            "Merge": "merge",
+            "PDF to JPG": "pdf2jpg"
         }
 
         selection = StringVar()
@@ -90,7 +93,7 @@ class Window():
                     pass
 
             elif selection.get() == "extractrange":
-                self.ExtractRangeFrame = LabelFrame(self.master, text="Extract Custom Range", width=300, height=150)
+                self.ExtractRangeFrame = LabelFrame(self.master, text="Extract Custom Range", width=250, height=150)
                 self.ExtractRangeFrame.place(x=165, y=10)
                 frame = self.ExtractRangeFrame
                 Label(frame, text="NOTE:- You may select only one file at a time for extraction.", fg='OrangeRed', wraplength=400, justify=LEFT).grid(row=0, column=0, columnspan=2, padx=10, pady=10)
@@ -172,6 +175,50 @@ class Window():
                 try:
                     self.ExtractAllFrame.destroy()
                     self.ExtractRangeFrame.destroy()
+                except AttributeError:
+                    pass
+
+            elif selection.get() == "pdf2jpg":
+                self.ExtractAllFrame = LabelFrame(self.master, text="Extract All Pages As JPG", width=250, height=150)
+                self.ExtractAllFrame.place(x=165, y=10)
+                frame = self.ExtractAllFrame
+                Label(frame, text="NOTE:- You may select only one file at a time for extraction.", fg='OrangeRed', wraplength=400, justify=LEFT).grid(row=1, column=0, columnspan=2)
+                def extractall():
+                    try:
+                        # Fetch the filepath
+                        absfilepath = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=[("PDF files", "*.pdf")])
+                        filepath = absfilepath.replace('/', '\\')
+                        p = Path(filepath)
+                        outputdir = str(p.parent)
+                        filename_only = str(p.name).split('.')[0]
+                        fileext = str(p.suffix)
+                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, columnspan=3, sticky='w', padx=5, pady=5)
+                        Label(frame, text=fr"Output Directory:- {outputdir}\PDF2JPG.pdf_dir", bg="lime", fg="black", wraplength=400, justify=LEFT).grid(row=6, column=0, columnspan=3, sticky='w', padx=5, pady=5)
+                        # Extract all pages of the PDF file
+                        input_pdf = PdfReader(filepath)
+                        if input_pdf.is_encrypted:
+                            password = str(passtext.get())
+                            input_pdf.decrypt(password)
+                        output = PdfWriter()
+                        for i, page in enumerate(input_pdf.pages):
+                            output.add_page(page)
+                        extracted_filepath = fr"{outputdir}\PDF2JPG.pdf"
+                        with open(extracted_filepath, "wb") as output_stream:
+                            output.write(output_stream)
+                        pdf_path = os.path.abspath(extracted_filepath)
+                        pdf2jpg.convert_pdf2jpg(inputpath=pdf_path, outputpath=outputdir, dpi=200, pages="ALL")
+                        os.remove(extracted_filepath)
+                        messagebox.showinfo(title="Success", message="Task completed successfully.")
+                    except Exception as e:
+                        messagebox.showerror(title="ERROR", message=fr"Error:- {e}")
+                Label(frame, text="Password for encrypted files:", wraplength=400, justify=LEFT).grid(row=2, column=0)
+                passtext = Entry(frame, show="*", width=15)
+                passtext.grid(row=2, column=1)
+                Label(frame, text="IMP:- This may take a while. Please be patient.....", fg='Red', wraplength=400, justify=LEFT, font='Helvetica 11 bold').grid(row=3, column=0, columnspan=2, padx=15, pady=15)
+                Button(frame, text="Select File", command=lambda: extractall()).grid(row=4, column=0, padx=10, pady=10, columnspan=2)
+                try:
+                    self.ExtractRangeFrame.destroy()
+                    self.MergeFrame.destroy()
                 except AttributeError:
                     pass
 
