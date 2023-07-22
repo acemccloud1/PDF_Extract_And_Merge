@@ -46,7 +46,7 @@ class Window():
         for text, value in Options.items():
             Radiobutton(self.RadioFrame, text=text, variable=selection, value=value, command=lambda: Clicked(selection.get())).pack(anchor=W)
 
-        Label(self.InfoFrame, text=f"Creator: Unmesh Patil\nLanguage: Python\nVersion: 1.0.0", wraplength=400, justify=LEFT).pack(anchor=W)
+        Label(self.InfoFrame, text=f"Creator: Unmesh Patil\nLanguage: Python\nVersion: 23.07.22", wraplength=400, justify=LEFT).pack(anchor=W)
 
         def Clicked(variable):
             if selection.get() == "extractall":
@@ -63,10 +63,13 @@ class Window():
                         outputdir = str(p.parent)
                         filename_only = str(p.name).split('.')[0]
                         fileext = str(p.suffix)
-                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, sticky='w')
-                        Label(frame, text=f"Output Directory:- {outputdir}", bg="lime", fg="black", wraplength=400, justify=LEFT).grid(row=6, column=0, sticky='w')
+                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, columnspan=3, sticky='w', padx=5, pady=5)
+                        Label(frame, text=f"Output Directory:- {outputdir}", bg="lime", fg="black", wraplength=400, justify=LEFT).grid(row=6, column=0, columnspan=3, sticky='w', padx=5, pady=5)
                         # Extract all pages of the PDF file
                         input_pdf = PdfReader(filepath)
+                        if input_pdf.is_encrypted:
+                            password = str(passtext.get())
+                            input_pdf.decrypt(password)
                         for i, page in enumerate(input_pdf.pages):
                             output = PdfWriter()
                             output.add_page(page)
@@ -76,7 +79,10 @@ class Window():
                         messagebox.showinfo(title="Success", message="Task completed successfully.")
                     except Exception as e:
                         messagebox.showerror(title="ERROR", message=fr"Error:- {e}")
-                Button(frame, text="Select File", command=lambda: extractall()).grid(row=2, column=0, padx=10, pady=10, columnspan=2)
+                Label(frame, text="Password for encrypted files:", wraplength=400, justify=LEFT).grid(row=2, column=0)
+                passtext = Entry(frame, show="*", width=15)
+                passtext.grid(row=2, column=1)
+                Button(frame, text="Select File", command=lambda: extractall()).grid(row=3, column=0, padx=10, pady=10, columnspan=2)
                 try:
                     self.ExtractRangeFrame.destroy()
                     self.MergeFrame.destroy()
@@ -84,17 +90,20 @@ class Window():
                     pass
 
             elif selection.get() == "extractrange":
-                self.ExtractRangeFrame = LabelFrame(self.master, text="Extract Custom Range", width=250, height=150)
+                self.ExtractRangeFrame = LabelFrame(self.master, text="Extract Custom Range", width=300, height=150)
                 self.ExtractRangeFrame.place(x=165, y=10)
                 frame = self.ExtractRangeFrame
-                Label(frame, text="NOTE:- You may select only one file at a time for extraction.", fg='OrangeRed', wraplength=400, justify=LEFT).grid(row=0, column=0, columnspan=2)
-                Label(frame, text="Step# 1 --> Start Page#", wraplength=400, justify=LEFT).grid(row=1, column=0)
+                Label(frame, text="NOTE:- You may select only one file at a time for extraction.", fg='OrangeRed', wraplength=400, justify=LEFT).grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+                Label(frame, text="Password for encrypted files:", wraplength=400, justify=LEFT).grid(row=1, column=0)
+                passtext = Entry(frame, show="*", width=15)
+                passtext.grid(row=1, column=1)
+                Label(frame, text="Step# 1 --> Start Page#", wraplength=400, justify=LEFT).grid(row=2, column=0)
                 e1 = Entry(frame, width=10)
-                e1.grid(row=1, column=1)
+                e1.grid(row=2, column=1)
                 e1.insert(0, "2")
-                Label(frame, text="Step# 2 --> End Page#", wraplength=400, justify=LEFT).grid(row=2, column=0)
+                Label(frame, text="Step# 2 --> End Page#", wraplength=400, justify=LEFT).grid(row=3, column=0)
                 e2 = Entry(frame, width=10)
-                e2.grid(row=2, column=1)
+                e2.grid(row=3, column=1)
                 e2.insert(0, "3")
                 def extractrange():
                     try:
@@ -105,10 +114,13 @@ class Window():
                         outputdir = str(p.parent)
                         filename_only = str(p.name).split('.')[0]
                         fileext = str(p.suffix)
-                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, sticky='w', columnspan=2)
-                        Label(frame, text=f"Output Directory:- {outputdir}", wraplength=400, justify=LEFT).grid(row=6, column=0, sticky='w', columnspan=2)
+                        Label(frame, text=f"Selected File:- {filepath}", wraplength=400, justify=LEFT).grid(row=5, column=0, sticky='w', columnspan=3)
+                        Label(frame, text=f"Output Directory:- {outputdir}", wraplength=400, justify=LEFT).grid(row=6, column=0, sticky='w', columnspan=3)
                         # Extract the pages from the give range
                         input_pdf = PdfReader(filepath)
+                        if input_pdf.is_encrypted:
+                            password = str(passtext.get())
+                            input_pdf.decrypt(password)
                         output = PdfWriter()
                         rangestart = int(e1.get())
                         rangeend = int(e2.get())
@@ -117,12 +129,12 @@ class Window():
                         extracted_filepath = fr"{outputdir}\{filename_only}_{rangestart}-{rangeend}{fileext}"
                         with open(extracted_filepath, "wb") as output_stream:
                             output.write(output_stream)
-                        Label(frame, text=f"Extracted File:- {extracted_filepath}", bg="lime", fg="black").grid(row=7, column=0, sticky='w', columnspan=2)
+                        Label(frame, text=f"Extracted File:- {extracted_filepath}", bg="lime", fg="black").grid(row=7, column=0, columnspan=3, sticky='w', padx=10, pady=10)
                         messagebox.showinfo(title="Success", message="Task completed successfully.")
                     except Exception as e:
                         messagebox.showerror(title="ERROR", message=fr"Error:- {e}")
-                Label(frame, text="Step# 3 --> ", wraplength=400, justify=LEFT).grid(row=3, column=0)
-                Button(frame, text="Select File", command=lambda: extractrange()).grid(row=3, column=1, padx=5, pady=5)
+                Label(frame, text="Step# 3 --> ", wraplength=400, justify=LEFT).grid(row=4, column=0)
+                Button(frame, text="Select File", command=lambda: extractrange()).grid(row=4, column=1, padx=5, pady=5)
                 try:
                     self.ExtractAllFrame.destroy()
                     self.MergeFrame.destroy()
